@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const booksSchema = new mongoose.Schema({
-    bookName: {
+    bookname: {
         required: true,
         type: String,
     },
@@ -9,6 +9,10 @@ const booksSchema = new mongoose.Schema({
     price: {
         required: true,
         type: String,
+    },
+    coverPic: {
+        type: String,
+        default: "",
     },
 });
 

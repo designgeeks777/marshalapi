@@ -1,6 +1,9 @@
 const express = require("express");
+const multer = require("multer");
 
 const router = express.Router();
+
+
 
 //module.exports = router;
 
@@ -14,12 +17,67 @@ router.use(function (req, res, next) {
     next();
 });
 
+const DIR = "./public/";
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, DIR);
+    },
+    filename: (req, file, cb) => {
+        const fileName = file.originalname.toLowerCase().split(" ").join("-");
+        cb(null, fileName);
+    },
+});
+var upload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        if (
+            file.mimetype == "image/png" ||
+            file.mimetype == "image/jpg" ||
+            file.mimetype == "image/jpeg" ||
+            file.mimetype == "text/plain" // text/plain added to support requests from IOS devices
+        ) {
+            cb(null, true);
+            console.log("File Type", file.mimetype);
+        } else {
+            console.log("File Type", file.mimetype);
+            cb(null, false);
+            return cb(new Error("Only .png, .jpg and .jpeg format allowed!"));
+        }
+    },
+});
+
 const Model = require("../model/booksModel");
 
 
 
 //Post Method - Books
-router.post("/books/", async (req, res) => {
+router.post("/books/", upload.single("coverPic"), async (req, res) => {
+    const url = req.protocol + "://" + req.get("host");
+    const book = new Model({
+        bookname: req.body.bookname,
+        price: req.body.price,
+        coverPic: url + "/public/" + req.file.filename,
+    });
+    // console.log("DATA", user, req.file);
+    user
+        .save()
+        .then((result) => {
+            res.status(201).json({
+                message: "Book registered successfully!",
+                bookCreated: {
+                    _id: result._id,
+                    bookname: result.name,
+                    price: result.gender,
+                    coverPic: result.profilePic,
+                },
+            });
+        })
+        .catch((err) => {
+            console.log(err),
+                res.status(500).json({
+                    error: err,
+                });
+        });
     const data = new Model({
         bookName: req.body.bookName,
         price: req.body.price,
