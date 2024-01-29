@@ -34,8 +34,8 @@ app.use("/api", payment);*/
 const books = require("./routes/books");
 app.use("/api", books);
 
-/*const transactions = require("./require/transactions");
-app.use("/api", transactions);*/
+const transactions = require("./routes/transactions");
+app.use("/api", transactions);
 
 
 
