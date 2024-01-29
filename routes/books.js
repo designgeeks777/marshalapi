@@ -66,9 +66,9 @@ router.post("/books/", upload.single("coverPic"), async (req, res) => {
                 message: "Book registered successfully!",
                 bookCreated: {
                     _id: result._id,
-                    bookname: result.name,
-                    price: result.gender,
-                    coverPic: result.profilePic,
+                    bookname: result.bookname,
+                    price: result.price,
+                    coverPic: result.coverPic,
                 },
             });
         })
@@ -78,17 +78,6 @@ router.post("/books/", upload.single("coverPic"), async (req, res) => {
                     error: err,
                 });
         });
-    const data = new Model({
-        bookName: req.body.bookName,
-        price: req.body.price,
-    });
-
-    try {
-        const dataToSave = await data.save();
-        res.status(200).json(dataToSave);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
 });
 
 //Get all Method - Books
