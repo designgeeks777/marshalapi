@@ -58,8 +58,8 @@ router.post("/books/", upload.single("coverPic"), async (req, res) => {
         price: req.body.price,
         coverPic: url + "/public/" + req.file.filename,
     });
-    // console.log("DATA", user, req.file);
-    user
+    console.log("DATA", book, req.file);
+    book
         .save()
         .then((result) => {
             res.status(201).json({
