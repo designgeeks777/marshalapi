@@ -14,6 +14,10 @@ const booksSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
+    bookpdf: {
+        type: String,
+        default: "",
+    },
     downloadCount: {
         type: Number,
         default: 0,

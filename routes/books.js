@@ -27,7 +27,7 @@ const storage = multer.diskStorage({
         cb(null, fileName);
     },
 });
-var upload = multer({
+/*var upload = multer({
     storage: storage,
     fileFilter: (req, file, cb) => {
         if (
@@ -44,21 +44,76 @@ var upload = multer({
             return cb(new Error("Only .png, .jpg and .jpeg format allowed!"));
         }
     },
+});*/
+
+const upload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        if (file.fieldname === "coverPic") {
+            // Handle validation for coverPic files
+            if (
+                file.mimetype == "image/png" ||
+                file.mimetype == "image/jpg" ||
+                file.mimetype == "image/jpeg" ||
+                file.mimetype == "text/plain"
+            ) {
+                cb(null, true);
+            } else {
+                cb(null, false);
+                return cb(new Error("Only .png, .jpg, .jpeg, and .txt format allowed for coverPic!"));
+            }
+        } else if (file.fieldname === "bookpdf") {
+            // Handle validation for bookpdf files
+            if (
+                file.mimetype == "application/pdf" ||
+                file.mimetype == "text/plain"
+            ) {
+                cb(null, true);
+            } else {
+                cb(null, false);
+                return cb(new Error("Only .pdf and .txt format allowed for bookpdf!"));
+            }
+        } else {
+            cb(null, false);
+            return cb(new Error("Invalid fieldname!"));
+        }
+    },
 });
+
+/*var uploadpdf = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        if (
+            file.mimetype == "application/pdf" ||
+            file.mimetype == "text/plain" // text/plain added to support requests from IOS devices
+        ) {
+            cb(null, true);
+            console.log("File Type", file.mimetype);
+        } else {
+            console.log("File Type", file.mimetype);
+            cb(null, false);
+            return cb(new Error("Only .pdf format allowed!"));
+        }
+    },
+});*/
 
 const Model = require("../model/booksModel");
 
-
-
-//Post Method - Books
-router.post("/books/", upload.single("coverPic"), async (req, res) => {
+//POST request - multiple file upload
+router.post("/books/", upload.fields([
+    { name: 'coverPic', maxCount: 1 },
+    { name: 'bookpdf', maxCount: 1 }
+]), async (req, res) => {
     const url = req.protocol + "://" + req.get("host");
+
     const book = new Model({
         bookname: req.body.bookname,
         price: req.body.price,
-        coverPic: url + "/public/" + req.file.filename,
+        coverPic: url + "/public/" + req.files['coverPic'][0].filename,
+        bookpdf: url + "/public/" + req.files['bookpdf'][0].filename,
     });
-    console.log("DATA", book, req.file);
+
+    console.log("DATA", book, req.files);
     book
         .save()
         .then((result) => {
@@ -80,10 +135,44 @@ router.post("/books/", upload.single("coverPic"), async (req, res) => {
         });
 }); 
 
+
+
+//Post Method - Books
+/*router.post("/books/", upload.single("coverPic"), uploadpdf.single("bookpdf"), async (req, res) => {
+    const url = req.protocol + "://" + req.get("host");
+    const book = new Model({
+        bookname: req.body.bookname,
+        price: req.body.price,
+        coverPic: url + "/public/" + req.file.filename,
+        bookpdf: url + "/public/" + req.file.filename,
+    });
+    console.log("DATA", book, req.file);
+    book
+        .save()
+        .then((result) => {
+            res.status(201).json({
+                message: "Book registered successfully!",
+                bookCreated: {
+                    _id: result._id,
+                    bookname: result.bookname,
+                    price: result.price,
+                    coverPic: result.coverPic,
+                },
+            });
+        })
+        .catch((err) => {
+            console.log(err),
+                res.status(500).json({
+                    error: err,
+                });
+        });
+}); */
+
 /*router.post("/books", async (req, res) => {
     const data = new Model({
         bookname: req.body.bookname,
         price: req.body.price,
+        coverPic: req.body.coverPic
     });
 
     try {
