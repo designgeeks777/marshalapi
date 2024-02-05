@@ -7,15 +7,15 @@ const router = express.Router();
 
 //module.exports = router;
 
-router.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", process.env.APP_URL);
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept"
-    );
-    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-    next();
-});
+// router.use(function (req, res, next) {
+//     res.header("Access-Control-Allow-Origin", process.env.APP_URL);
+//     res.header(
+//         "Access-Control-Allow-Headers",
+//         "Origin, X-Requested-With, Content-Type, Accept"
+//     );
+//     res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+//     next();
+// });
 
 
 
