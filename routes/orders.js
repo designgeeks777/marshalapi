@@ -66,7 +66,7 @@ router.post(
             phone: req.body.phone,
             paymentscreenshot: url + "/public/" + req.files["paymentscreenshot"][0].filename,
         });
-        console.log("DATA", book, req.files);
+        console.log("DATA", data, req.files);
         data
             .save()
             .then((result) => {

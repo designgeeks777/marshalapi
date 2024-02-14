@@ -59,3 +59,6 @@ app.use("/api", transactions);
 
 const orders = require("./routes/orders");
 app.use("/api", orders);
+
+const email = require("./routes/email");
+app.use("/api", email);
