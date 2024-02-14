@@ -56,3 +56,6 @@ app.use("/api", books);
 
 const transactions = require("./routes/transactions");
 app.use("/api", transactions);
+
+const orders = require("./routes/orders");
+app.use("/api", orders);
